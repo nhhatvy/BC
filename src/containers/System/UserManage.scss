@@ -1,0 +1,271 @@
+/* UserManage.scss */
+.users-container {
+  padding: 16px;
+  text-decoration-color: #f2f2f2;
+}
+
+.title {
+  margin: 0 0 12px;
+}
+
+.user-table table {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.user-table td,
+.user-table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.user-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.user-table tr:hover {
+  background-color: #ddd;
+}
+
+.user-table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #04aa6d;
+  color: white;
+}
+
+.btn-edit{
+  width: 60px;
+  border: none;
+  color: #04aa6d;
+  background:  transparent;
+  outline: none;
+  
+  &:hover {
+    background-color : transparent !important;
+    color : #04aa6d !important;
+  }
+}
+
+.btn-delete{
+  width: 60px;
+  border: none;
+  color: #9a0202;
+  background:  transparent;
+  outline: none;
+  
+  &:hover {
+    background-color : transparent !important;
+    color : #9a0202 !important;
+  }
+}
+
+:root {
+  --grad-start: rgba(34, 193, 195, 1);
+  --grad-end: rgba(253, 187, 45, 1);
+  --muted: rgba(187, 187, 187, 0.9);
+}
+
+.modal-user-container {
+  font-family: "Work Sans", system-ui, -apple-system, Segoe UI, Roboto, "Open Sans", sans-serif;
+
+  /* --- TÙY CHỌN: Header custom (nếu bạn tự render nút X) --- */
+  .custom-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    .modal-title {
+      flex: 1;
+      text-align: center;
+      margin: 0;
+    }
+
+    .close {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 24px;
+      border: none;
+      background: transparent;
+      color: #fff; /* đổi #000 nếu header nền sáng */
+      cursor: pointer;
+    }
+  }
+
+  /* Card modal */
+  .modal-content {
+    border: 0;
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+
+  /* Header mặc định (dùng <ModalHeader toggle>) */
+  .modal-header {
+    background: linear-gradient(90deg, var(--grad-start) 0%, var(--grad-end) 100%);
+    color: #fff;
+    padding: 1rem 1.25rem;
+
+    /* Căn giữa tiêu đề và đẩy nút × sang phải */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    .modal-title,
+    h5 {
+      font-family: "Open Sans", sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+
+      flex: 1;
+      text-align: center;
+      margin: 0;
+      color: #fff;
+    }
+
+    .close,
+    button.close {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      margin: 0;
+
+      background-color: transparent !important;
+      color: #fff;
+      font-size: 24px;
+      border: none;
+      opacity: 0.95;
+      transition: opacity 0.2s ease;
+      &:hover { opacity: 1; }
+    }
+  }
+
+  .modal-body,
+  .modal-user-body {
+    padding: 1.25rem 1.5rem 1.75rem;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    background: #fff;
+  }
+
+  /* Input kiểu login */
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    width: 49%;
+    position: relative;
+
+    &.max-width-input { width: 100%; }
+
+    label {
+      color: var(--muted);
+      font-size: 0.95rem;
+      padding-left: 0.25rem;
+      padding-bottom: 0.5rem;
+      user-select: none;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: none;
+      border-radius: 0;
+      font-size: 1.05rem;
+      padding: 0 0 0.8rem 0.25rem;
+      background: transparent;
+      box-shadow: inset 0 -3px 0 0 rgba(187, 187, 187, 0.25);
+      transition: box-shadow 0.2s ease-in, background-color 0.2s ease-in;
+      outline: none;
+
+      &::placeholder { opacity: 1; transition: opacity 0.25s ease-out; }
+      &:hover::placeholder,
+      &:focus::placeholder { opacity: 0; }
+
+      &:focus {
+        box-shadow: inset 0 -3px 0 0 rgba(34, 193, 195, 0.7);
+        background-color: transparent;
+      }
+    }
+
+    textarea { min-height: 90px; resize: vertical; }
+
+    &.is-invalid input,
+    &.is-invalid select,
+    &.is-invalid textarea { box-shadow: inset 0 -3px 0 0 rgba(219, 68, 55, 0.6); }
+    &.is-valid input,
+    &.is-valid select,
+    &.is-valid textarea { box-shadow: inset 0 -3px 0 0 rgba(66, 185, 131, 0.7); }
+
+    .hint, .error {
+      margin-top: 6px; font-size: 0.85rem; padding-left: 0.25rem;
+    }
+    .hint { color: #6b7280; }
+    .error { color: #DC2626; }
+  }
+
+  /* Toggle password */
+  .custom-input-password {
+    position: relative;
+
+    input { padding-right: 3rem; }
+    .toggle-password {
+      position: absolute;
+      right: 12px; top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer; color: #555;
+      i { font-size: 1rem; }
+    }
+  }
+
+  /* Footer buttons */
+  .form-actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 4px;
+    margin-top: 8px;
+  }
+
+  .btn-gradient {
+    border-radius: 25px;
+    min-width: 120px;
+    height: 40px;
+    padding: 0 18px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    border: 0; cursor: pointer;
+    background: linear-gradient(90deg, var(--grad-start) 0%, var(--grad-end) 100%);
+    transition: opacity 0.25s ease-out, transform 0.05s ease-in, box-shadow 0.2s ease;
+    box-shadow: 0 8px 18px rgba(34, 193, 195, 0.15);
+
+    &:hover { opacity: 0.92; }
+    &:active { transform: translateY(1px); }
+  }
+
+  .btn-ghost {
+    border-radius: 25px;
+    min-width: 110px;
+    height: 40px;
+    padding: 0 16px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #10201f;
+    background: rgba(0,0,0,0.04);
+    border: 0; cursor: pointer;
+    transition: background 0.2s ease, transform 0.05s ease-in;
+    &:hover { background: rgba(0,0,0,0.06); }
+    &:active { transform: translateY(1px); }
+  }
+}
