@@ -1,173 +1,139 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import { push } from "connected-react-router";
-
-import * as actions from "../store/actions";
-import { KeyCodeUtils, LanguageUtils } from "../utils";
-
-import userIcon from '../../src/assets/images/user.svg';
-import passIcon from '../../src/assets/images/pass.svg';
-import './Login.scss';
-import { FormattedMessage } from 'react-intl';
-
-import adminService from '../services/adminService';
+import * as actions from "../../store/actions";
+import "./Login.scss";
+import { handleLoginApi } from "../../services/userService";
 
 class Login extends Component {
-    constructor(props) {
-        super(props);
-        this.btnLogin = React.createRef();
-    }
-
-    initialState = {
-        username: '',
-        password: '',
-        loginError: ''
-    }
-
-    state = {
-        ...this.initialState
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: "",
+      password: "",
+      isShowPassword: false, // giữ tính năng hide/show
+      errMessage: "",
     };
+  }
 
-    refresh = () => {
+  handleOnChangeUsername = (event) => {
+    this.setState({ username: event.target.value });
+  };
+
+  handleOnChangePassword = (event) => {
+    this.setState({ password: event.target.value });
+  };
+
+  handleLogin = async () => {
+    this.setState({ errMessage: "" });
+    try {
+      let data = await handleLoginApi(this.state.username, this.state.password);
+      if (data && data.errCode !== 0) {
+        this.setState({ errMessage: data.message });
+        return;
+      }
+      if (data && data.errCode === 0) {
+        this.props.userLoginSuccess(data.user);
+        console.log("login success", data);
+      }
+    } catch (error) {
+      if (error.response && error.response.data) {
+        this.setState({ errMessage: error.response.data.message });
+      } else {
         this.setState({
-            ...this.initialState
-        })
+          errMessage: "Something went wrong. Please try again.",
+        });
+      }
     }
+  };
 
-    onUsernameChange = (e) => {
-        this.setState({ username: e.target.value })
-    }
+  handleshowHidePassword = () => {
+    this.setState((prev) => ({ isShowPassword: !prev.isShowPassword }));
+  };
 
-    onPasswordChange = (e) => {
-        this.setState({ password: e.target.value })
-    }
+  render() {
+    return (
+      <div className="login-background">
+        <div className="login-container">
+          <div className="login-content">
+            <div className="col-12 login-text">Login</div>
 
-    redirectToSystemPage = () => {
-        const { navigate } = this.props;
-        const redirectPath = '/system/user-manage';
-        navigate(`${redirectPath}`);
-    }
-
-    processLogin = () => {
-        const { username, password } = this.state;
-
-        const { adminLoginSuccess, adminLoginFail } = this.props;
-        let loginBody = {
-            username: 'admin',
-            password: '123456'
-        }
-        //sucess
-        let adminInfo = {
-            "tlid": "0",
-            "tlfullname": "Administrator",
-            "custype": "A",
-            "accessToken": "eyJhbGciOiJIU"
-        }
-
-        adminLoginSuccess(adminInfo);
-        this.refresh();
-        this.redirectToSystemPage();
-        try {
-            adminService.login(loginBody)
-        } catch (e) {
-            console.log('error login : ', e)
-        }
-
-    }
-
-    handlerKeyDown = (event) => {
-        const keyCode = event.which || event.keyCode;
-        if (keyCode === KeyCodeUtils.ENTER) {
-            event.preventDefault();
-            if (!this.btnLogin.current || this.btnLogin.current.disabled) return;
-            this.btnLogin.current.click();
-        }
-    };
-
-    componentDidMount() {
-        document.addEventListener('keydown', this.handlerKeyDown);
-    }
-
-    componentWillUnmount() {
-        document.removeEventListener('keydown', this.handlerKeyDown);
-        // fix Warning: Can't perform a React state update on an unmounted component
-        this.setState = (state, callback) => {
-            return;
-        };
-    }
-
-    render() {
-        const { username, password, loginError } = this.state;
-        const { lang } = this.props;
-
-        return (
-            <div className="login-wrapper">
-                <div className="login-container">
-                    <div className="form_login">
-                        <h2 className="title">
-                            <FormattedMessage id="login.login" />
-                        </h2>
-                        <div className="form-group icon-true">
-                            <img className="icon" src={userIcon} alt="this" />
-                            <input
-                                placeholder={LanguageUtils.getMessageByKey("login.username", lang)}
-                                id="username"
-                                name="username"
-                                type="text"
-                                className="form-control"
-                                value={username}
-                                onChange={this.onUsernameChange}
-                            />
-                        </div>
-
-                        <div id="phone-input-container" className="form-group icon-true">
-                            <img className="icon" src={passIcon} alt="this" />
-                            <input
-                                placeholder={LanguageUtils.getMessageByKey("login.password", lang)}
-                                id="password"
-                                name="password"
-                                type="password"
-                                className="form-control"
-                                value={password}
-                                onChange={this.onPasswordChange}
-                            />
-                        </div>
-
-                        {loginError !== '' && (
-                            <div className='login-error'>
-                                <span className='login-error-message'>{loginError}</span>
-                            </div>
-                        )}
-
-                        <div className="form-group login">
-                            <input
-                                ref={this.btnLogin}
-                                id="btnLogin"
-                                type="submit"
-                                className="btn"
-                                value={LanguageUtils.getMessageByKey("login.login", lang)}
-                                onClick={this.processLogin}
-                            />
-                        </div>
-                    </div>
-                </div>
+            <div className="col-12 form-group login-input">
+              <label>Username</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Enter your username"
+                value={this.state.username}
+                onChange={this.handleOnChangeUsername}
+              />
             </div>
-        )
-    }
+
+            <div className="col-12 form-group login-input">
+              <label>Password</label>
+              <div className="custom-input-password">
+                <input
+                  type={this.state.isShowPassword ? "text" : "password"}
+                  className="form-control"
+                  placeholder="Enter your password"
+                  value={this.state.password}
+                  onChange={this.handleOnChangePassword}
+                />
+                <span
+                  onClick={this.handleshowHidePassword}
+                  className="toggle-password"
+                >
+                  <i
+                    className={
+                      this.state.isShowPassword
+                        ? "fas fa-eye"
+                        : "fas fa-eye-slash"
+                    }
+                  ></i>
+                </span>
+              </div>
+            </div>
+
+            <div className="col-12 text-center ">{this.state.errMessage}</div>
+
+            <div className="col-12">
+              <button className="btn-login" onClick={this.handleLogin}>
+                Login
+              </button>
+            </div>
+
+            <div className="col-12 forgot-line">
+              <span className="forgot-password">Forgot your password?</span>
+            </div>
+
+            <div className="col-12 text-center mt-3">
+              <span className="text-other-login">Or sign in with:</span>
+            </div>
+
+            <div className="col-12 social-login">
+              <i className="fab fa-google-plus-g google"></i>
+              <i className="fab fa-facebook-f facebook"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 
-const mapStateToProps = state => {
-    return {
-        lang: state.app.language
-    };
+const mapStateToProps = (state) => {
+  return {
+    languages: state.app.language,
+  };
 };
 
-const mapDispatchToProps = dispatch => {
-    return {
-        navigate: (path) => dispatch(push(path)),
-        adminLoginSuccess: (adminInfo) => dispatch(actions.adminLoginSuccess(adminInfo)),
-        adminLoginFail: () => dispatch(actions.adminLoginFail()),
-    };
+const mapDispatchToProps = (dispatch) => {
+  return {
+    navigate: (path) => dispatch(push(path)),
+    // userLoginFail: () => dispatch(actions.adminLoginFail()),
+    userLoginSuccess: (userInfor) =>
+      dispatch(actions.userLoginSuccess(userInfor)),
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

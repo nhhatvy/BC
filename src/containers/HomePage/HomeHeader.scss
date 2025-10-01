@@ -15,6 +15,10 @@
   width: 100%;
   background: var(--bg);
   border-bottom: 1px solid #eef2f7;
+  position: sticky;
+  top : 0;
+  background-color: white;
+  z-index: 10000;
 
   .home-header-content {
     width: 1200px;
