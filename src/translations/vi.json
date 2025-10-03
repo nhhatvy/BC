@@ -55,6 +55,7 @@
         "position": "Chức vụ",
         "role": "Vai trò",
         "password": "Mật khẩu",
-        "image": "Ảnh đại diện"
+        "image": "Ảnh đại diện",
+        "save": "Lưu"
     }
 }

@@ -50,7 +50,8 @@
   "position": "Position",
   "role": "Role",
     "password": "Password",
-    "image": "Avatar"
+    "image": "Avatar",
+    "save": "Save"
 }
 
 }
