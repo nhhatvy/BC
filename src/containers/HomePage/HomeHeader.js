@@ -34,7 +34,10 @@ class HomeHeader extends Component {
               </div>
               <div className="child-content">
                 <div>
-                  <b> <FormattedMessage id="homeheader.health-facility" /></b>
+                  <b>
+                    {" "}
+                    <FormattedMessage id="homeheader.health-facility" />
+                  </b>
                 </div>
                 <div className="subs-title">
                   <FormattedMessage id="homeheader.health-facility" />
@@ -66,12 +69,24 @@ class HomeHeader extends Component {
                 <i className="fas fa-question-circle"></i>
                 <FormattedMessage id="homeheader.support" />
               </div>
-              <div className={language === LANGUAGES.VI ? 'language-vi active' : 'language-vi'}>
+              <div
+                className={
+                  language === LANGUAGES.VI
+                    ? "language-vi active"
+                    : "language-vi"
+                }
+              >
                 <span onClick={() => this.changeLanguage(LANGUAGES.VI)}>
                   VN
                 </span>
               </div>
-              <div className={language === LANGUAGES.EN ? 'language-en active' : 'language-en'}>
+              <div
+                className={
+                  language === LANGUAGES.EN
+                    ? "language-en active"
+                    : "language-en"
+                }
+              >
                 <span onClick={() => this.changeLanguage(LANGUAGES.EN)}>
                   ENG
                 </span>
@@ -157,6 +172,7 @@ const mapStateToProps = (state) => {
   return {
     isLoggedIn: state.user.isLoggedIn,
     lang: state.app.language,
+    language: state.app.language,
   };
 };
 
