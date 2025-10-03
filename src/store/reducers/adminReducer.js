@@ -9,6 +9,15 @@ const initialState = {
 const adminReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.FECTH_GENDER_START:
+        let copyState = { ...state };
+        copyState.isLoadingGender = true;
+        return {
+          ...copyState,
+        };
+      
+    case actionTypes.FECTH_GENDER_SUCCESS:
+      state.genders = action.data;
+      state.isLoadingGender = false;
       return {
         ...state,
       };
